@@ -5,29 +5,28 @@ import java.awt.event.ActionListener;
 
 public class Kalkulator implements ActionListener {
 
-    double numer1=0, numer2=0, wynik=0;
+    double numer1 = 0, numer2 = 0, wynik = 0;
     int obliczenia;
 
-    Kalkulator(){       //konstruktor
+    JFrame ramka = new JFrame("Kalkulator");
+    JTextField wyswietlacz = new JTextField();
+    JButton[] cyfry = new JButton[10];
+    Font czcionka = new Font("Arial", Font.BOLD, 30);
+    JPanel panel = new JPanel();
 
-        JFrame ramka=new JFrame("Kalkulator");
-        JTextField wyswietlacz = new JTextField();
-        JButton[] cyfry = new JButton[10];
-        Font czcionka = new Font("Arial", Font.BOLD,30);
-        JPanel panel = new JPanel();
+    //przyciski funkcyjne
+    JButton dodawanie = new JButton("+");
+    JButton odejmowanie = new JButton("-");
+    JButton mnozenie = new JButton("*");
+    JButton dzielenie = new JButton("/");
+    JButton przecinek = new JButton(",");
+    JButton rownasie = new JButton("=");
+    JButton nawias1 = new JButton("(");
+    JButton nawias2 = new JButton(")");
+    JButton del = new JButton("del");
+    JButton clr = new JButton("clr");
 
-        //przyciski funkcyjne
-        JButton dodawanie = new JButton("+");
-        JButton odejmowanie = new JButton("-");
-        JButton mnozenie = new JButton("*");
-        JButton dzielenie = new JButton("/");
-        JButton przecinek = new JButton(",");
-        JButton rownasie = new JButton("=");
-        JButton nawias1 = new JButton ("(");
-        JButton nawias2 = new JButton (")");
-        JButton del = new JButton("del");
-        JButton clr = new JButton("clr");
-
+    Kalkulator() {       //konstruktor
         dodawanie.addActionListener(this);
         odejmowanie.addActionListener(this);
         mnozenie.addActionListener(this);
@@ -51,14 +50,14 @@ public class Kalkulator implements ActionListener {
         clr.setFont(czcionka);
 
         //przyciski 0-9:
-        for(int i=0; i<10; i++) {
-            cyfry[i] = new JButton(String.valueOf(i));
+        for (int i = 0; i < 10; i++) {
+            cyfry[i] = new JButton(Integer.toString(i));
             cyfry[i].addActionListener(this);
             cyfry[i].setFont(czcionka);
         }
 
         ramka.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ramka.setSize(650,600);
+        ramka.setSize(650, 600);
         ramka.setLayout(null);
         ramka.setVisible(true);
 
@@ -68,7 +67,7 @@ public class Kalkulator implements ActionListener {
         ramka.add(wyswietlacz);
 
         panel.setBounds(50, 100, 530, 500);
-        panel.setLayout(new GridLayout(6,5,6,6));
+        panel.setLayout(new GridLayout(6, 5, 6, 6));
         panel.add(cyfry[1]);
         panel.add(cyfry[2]);
         panel.add(cyfry[3]);
@@ -100,7 +99,35 @@ public class Kalkulator implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object input = e.getSource();
 
-
+        for (int i = 0; i < 10; i++) {
+            if (input == cyfry[i]) {
+                wyswietlacz.setText(wyswietlacz.getText().concat(Integer.toString(i)));
+            }
         }
+        if (input == przecinek) {
+            wyswietlacz.setText(wyswietlacz.getText().concat("."));
+        }
+        if (input == dodawanie) {
+            wyswietlacz.setText(wyswietlacz.getText().concat("+"));
+        }
+        if (input == odejmowanie) {
+            wyswietlacz.setText(wyswietlacz.getText().concat("-"));
+        }
+        if (input == mnozenie) {
+            wyswietlacz.setText(wyswietlacz.getText().concat("*"));
+        }
+        if (input == dzielenie) {
+            wyswietlacz.setText(wyswietlacz.getText().concat("/"));
+        }
+        if (input == nawias1) {
+            wyswietlacz.setText(wyswietlacz.getText().concat("("));
+        }
+        if (input == nawias2) {
+            wyswietlacz.setText(wyswietlacz.getText().concat(")"));
+        }
+
+
+    }
 }
