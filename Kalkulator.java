@@ -1,7 +1,13 @@
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Kalkulator implements ActionListener {
 
@@ -93,6 +99,57 @@ public class Kalkulator implements ActionListener {
     }
 
 
+    public void rozwiazanie() {
+        String dzialanie = wyswietlacz.getText();
+        //System.out.println(dzialanie.indexOf("("));
+
+        int licznik=0;
+        for(int i=0; i<dzialanie.length(); i++){
+            String znak = dzialanie.substring(i,i+1);
+            if (znak.equals("+")||znak.equals("-")||znak.equals("*")||znak.equals("/")){
+                licznik++;
+            }
+            }
+        int[] operatory = new int[licznik];
+        int o = 0;
+        for(int i=0; i<dzialanie.length(); i++){
+            String znak = dzialanie.substring(i,i+1);
+            if (znak.equals("+")||znak.equals("-")||znak.equals("*")||znak.equals("/")){
+                operatory[o]=i;
+                o++;
+            }
+        }
+        int a=0;
+        Double [] liczby = new Double[licznik+1];
+        for (int i = 0; i < operatory.length; i++) {
+            liczby[i] = Double.valueOf(dzialanie.substring(a, operatory[i]));
+            a=operatory[i]+1;
+        }
+        liczby[licznik] = Double.valueOf(dzialanie.substring(a));
+
+
+        System.out.println(Arrays.toString(liczby));
+        System.out.println(Arrays.toString(operatory));
+
+        for (int element : operatory) {
+            System.out.println(dzialanie.substring(element,element+1));
+            
+        }
+
+    }
+
+
+    public void error(){
+        try {
+            System.out.println("Blad");
+            Thread.sleep(1000);
+            wyswietlacz.setText("");
+
+        } catch (InterruptedException ie) {
+            throw new RuntimeException(ie);
+        }
+    }
+
     public static void main(String[] args) {
         Kalkulator kalk = new Kalkulator();  // obiekt klasy kalkulator
     }
@@ -108,26 +165,31 @@ public class Kalkulator implements ActionListener {
         }
         if (input == przecinek) {
             wyswietlacz.setText(wyswietlacz.getText().concat("."));
-        }
-        if (input == dodawanie) {
+        } else if (input == dodawanie) {
             wyswietlacz.setText(wyswietlacz.getText().concat("+"));
-        }
-        if (input == odejmowanie) {
+        } else if (input == odejmowanie) {
             wyswietlacz.setText(wyswietlacz.getText().concat("-"));
-        }
-        if (input == mnozenie) {
+        } else if (input == mnozenie) {
             wyswietlacz.setText(wyswietlacz.getText().concat("*"));
-        }
-        if (input == dzielenie) {
+        } else if (input == dzielenie) {
             wyswietlacz.setText(wyswietlacz.getText().concat("/"));
-        }
-        if (input == nawias1) {
+        } else if (input == nawias1) {
             wyswietlacz.setText(wyswietlacz.getText().concat("("));
-        }
-        if (input == nawias2) {
+        } else if (input == nawias2) {
             wyswietlacz.setText(wyswietlacz.getText().concat(")"));
-        }
-
-
+        } else if (input == del) {
+            wyswietlacz.setText("");
+        } else if (input == clr) {
+            try {
+                wyswietlacz.setText(wyswietlacz.getText(0, wyswietlacz.getText().length() - 1));
+            } catch (BadLocationException ex) {
+                error();
+            }
+        } else if (input == rownasie){
+            rozwiazanie();}
     }
+
+
+
 }
+
