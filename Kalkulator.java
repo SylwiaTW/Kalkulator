@@ -3,16 +3,15 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static java.lang.Math.*;
 
 public class Kalkulator implements ActionListener {
 
     double numer1 = 0, numer2 = 0, wynik = 0;
-    int obliczenia;
+    char dzialanie;
 
     JFrame ramka = new JFrame("Kalkulator");
     JTextField wyswietlacz = new JTextField();
@@ -27,8 +26,8 @@ public class Kalkulator implements ActionListener {
     JButton dzielenie = new JButton("/");
     JButton przecinek = new JButton(",");
     JButton rownasie = new JButton("=");
-    JButton nawias1 = new JButton("(");
-    JButton nawias2 = new JButton(")");
+    JButton pierwiastek = new JButton("\u221A");
+    JButton minus = new JButton("'-'");
     JButton del = new JButton("del");
     JButton clr = new JButton("clr");
 
@@ -39,8 +38,8 @@ public class Kalkulator implements ActionListener {
         dzielenie.addActionListener(this);
         przecinek.addActionListener(this);
         rownasie.addActionListener(this);
-        nawias1.addActionListener(this);
-        nawias2.addActionListener(this);
+        pierwiastek.addActionListener(this);
+        minus.addActionListener(this);
         del.addActionListener(this);
         clr.addActionListener(this);
 
@@ -50,8 +49,8 @@ public class Kalkulator implements ActionListener {
         dzielenie.setFont(czcionka);
         przecinek.setFont(czcionka);
         rownasie.setFont(czcionka);
-        nawias1.setFont(czcionka);
-        nawias2.setFont(czcionka);
+        pierwiastek.setFont(czcionka);
+        minus.setFont(czcionka);
         del.setFont(czcionka);
         clr.setFont(czcionka);
 
@@ -87,8 +86,8 @@ public class Kalkulator implements ActionListener {
         panel.add(cyfry[9]);
         panel.add(odejmowanie);
         panel.add(cyfry[0]);
-        panel.add(nawias1);
-        panel.add(nawias2);
+        panel.add(pierwiastek);
+        panel.add(minus);
         panel.add(dodawanie);
         panel.add(del);
         panel.add(clr);
@@ -98,57 +97,6 @@ public class Kalkulator implements ActionListener {
         ramka.add(panel);
     }
 
-
-    public void rozwiazanie() {
-        String dzialanie = wyswietlacz.getText();
-        //System.out.println(dzialanie.indexOf("("));
-
-        int licznik=0;
-        for(int i=0; i<dzialanie.length(); i++){
-            String znak = dzialanie.substring(i,i+1);
-            if (znak.equals("+")||znak.equals("-")||znak.equals("*")||znak.equals("/")){
-                licznik++;
-            }
-            }
-        int[] operatory = new int[licznik];
-        int o = 0;
-        for(int i=0; i<dzialanie.length(); i++){
-            String znak = dzialanie.substring(i,i+1);
-            if (znak.equals("+")||znak.equals("-")||znak.equals("*")||znak.equals("/")){
-                operatory[o]=i;
-                o++;
-            }
-        }
-        int a=0;
-        Double [] liczby = new Double[licznik+1];
-        for (int i = 0; i < operatory.length; i++) {
-            liczby[i] = Double.valueOf(dzialanie.substring(a, operatory[i]));
-            a=operatory[i]+1;
-        }
-        liczby[licznik] = Double.valueOf(dzialanie.substring(a));
-
-
-        System.out.println(Arrays.toString(liczby));
-        System.out.println(Arrays.toString(operatory));
-
-        for (int element : operatory) {
-            System.out.println(dzialanie.substring(element,element+1));
-            
-        }
-
-    }
-
-
-    public void error(){
-        try {
-            System.out.println("Blad");
-            Thread.sleep(1000);
-            wyswietlacz.setText("");
-
-        } catch (InterruptedException ie) {
-            throw new RuntimeException(ie);
-        }
-    }
 
     public static void main(String[] args) {
         Kalkulator kalk = new Kalkulator();  // obiekt klasy kalkulator
@@ -166,29 +114,52 @@ public class Kalkulator implements ActionListener {
         if (input == przecinek) {
             wyswietlacz.setText(wyswietlacz.getText().concat("."));
         } else if (input == dodawanie) {
-            wyswietlacz.setText(wyswietlacz.getText().concat("+"));
+            numer1=Double.valueOf(wyswietlacz.getText());
+            wyswietlacz.setText("");
+            dzialanie='+';
         } else if (input == odejmowanie) {
-            wyswietlacz.setText(wyswietlacz.getText().concat("-"));
+            numer1=Double.valueOf(wyswietlacz.getText());
+            wyswietlacz.setText("");
+            dzialanie='-';
         } else if (input == mnozenie) {
-            wyswietlacz.setText(wyswietlacz.getText().concat("*"));
+            numer1=Double.valueOf(wyswietlacz.getText());
+            wyswietlacz.setText("");
+            dzialanie='*';
         } else if (input == dzielenie) {
-            wyswietlacz.setText(wyswietlacz.getText().concat("/"));
-        } else if (input == nawias1) {
-            wyswietlacz.setText(wyswietlacz.getText().concat("("));
-        } else if (input == nawias2) {
-            wyswietlacz.setText(wyswietlacz.getText().concat(")"));
+            numer1=Double.valueOf(wyswietlacz.getText());
+            wyswietlacz.setText("");
+            dzialanie='/';
+        } else if (input == pierwiastek) {
+            numer1=Double.valueOf(wyswietlacz.getText());
+            dzialanie='p';
+        } else if (input == minus) {
+           double temp = Double.valueOf(wyswietlacz.getText());
+           temp*=-1;
+           wyswietlacz.setText(String.valueOf(temp));
+
         } else if (input == del) {
             wyswietlacz.setText("");
         } else if (input == clr) {
             try {
                 wyswietlacz.setText(wyswietlacz.getText(0, wyswietlacz.getText().length() - 1));
             } catch (BadLocationException ex) {
-                error();
+                wyswietlacz.setText("error");
             }
         } else if (input == rownasie){
-            rozwiazanie();}
-    }
+            numer2=Double.valueOf(wyswietlacz.getText());
+            switch(dzialanie) {
+                case '+' -> wynik = numer1 + numer2;
+                case '-' -> wynik = numer1 - numer2;
+                case '*' -> wynik = numer1 * numer2;
+                case '/' -> wynik = numer1 / numer2;
+                case 'p' -> wynik = sqrt(numer2);
+            }
 
+                wyswietlacz.setText(String.valueOf(wynik));
+
+
+            }
+    }
 
 
 }
